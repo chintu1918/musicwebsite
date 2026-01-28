@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loud&Live | Schedule</title>
+    <link rel="shortcut icon" href="assets/Images/favicon.png" type="image/x-icon">
+
+    <style>
+      body {
+        background-image: url(assets/Images/bg.png);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+        font-family: monospace;
+      }
+
+      header {
+        background-color: #101010a4;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      header img {
+        width: 70px;
+        border-radius: 50%;
+      }
+
+      nav a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      nav a:hover {
+        color: #f3a303;
+      }
+
+      button {
+        padding: 8px 15px;
+        background: #ffdd99;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      button:hover {
+        background: #ffe7b8;
+      }
+
+      h1,
+      h2,
+      p {
+        color: black;
+        text-shadow: 2px 2px 5px white;
+        margin-left: 20px;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 80px;
+      }
+      p {
+        text-align: center;
+        font-size: 40px;
+      }
+
+      button {
+        display: block;
+        margin: 20px auto;
+        font-size: 20px;
+      }
+      section a {
+        text-decoration: none;
+      }
+      .event {
+        padding: 40px;
+        text-align: center;
+      }
+      
+      .event h2 {
+        font-size: 36px;
+        margin-bottom: 30px;
+      }
+
+      .cards {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .card {
+        background-color: #d7c092;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        width: 300px;
+        text-align: center;
+      }
+      .card img {
+        width: 100%;
+        height: 60%;
+        border-radius: 8px;
+        margin-bottom: 10px;
+      }
+      .card p{
+        font-size: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <div class="logo">
+        <img src="assets/images/logo.png" alt="Loud & Live logo" />
+        <p style="color: white">Loud & Live</p>
+      </div>
+      <nav>
+        <a href="home.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="schedule.html">Schedule</a>
+        <a href="speakers.html">Speakers</a>
+        <a href="tickets.html">Tickets</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </header>
+    <section class="event">
+      <h2>Hyderabad Live Jam</h2>
+      <div class="cards">
+        <div class="card">
+          <img src="assets/Images/hyd live jam.jpeg" alt="event2" />
+          <h3>Hyderabad Live Jam</h3>
+          <h4>Ticket Price</h4>
+          <p>Regulars - 1499 | Premium - 2499 | VIP's - 3499</p>
+          <a href="regestration.html"><button>Book Now</button></a>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

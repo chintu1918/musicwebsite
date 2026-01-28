@@ -1,0 +1,51 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="sand" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:0.6" />
+      <stop offset="100%" style="stop-color:#daa520;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg4)"/>
+  
+  <!-- Beach sand -->
+  <ellipse cx="400" cy="500" rx="500" ry="150" fill="url(#sand)"/>
+  
+  <!-- Crowd silhouettes on beach -->
+  <g fill="rgba(0,0,0,0.5)">
+    <circle cx="150" cy="450" r="18"/>
+    <circle cx="200" cy="470" r="20"/>
+    <circle cx="280" cy="460" r="19"/>
+    <circle cx="350" cy="475" r="22"/>
+    <circle cx="450" cy="480" r="21"/>
+    <circle cx="520" cy="470" r="20"/>
+    <circle cx="600" cy="465" r="19"/>
+    <circle cx="680" cy="475" r="22"/>
+  </g>
+  
+  <!-- Performer on stage silhouette -->
+  <g fill="rgba(255,255,255,0.3)">
+    <circle cx="400" cy="320" r="25"/>
+    <rect x="385" y="350" width="30" height="50" rx="3"/>
+    <rect x="365" y="360" width="70" height="8" rx="2"/>
+  </g>
+  
+  <!-- Lights beam effects -->
+  <g opacity="0.3" fill="rgba(255,215,0,0.4)">
+    <polygon points="200,300 300,500 100,500"/>
+    <polygon points="600,300 700,500 500,500"/>
+  </g>
+  
+  <!-- Road markings (beach road) -->
+  <g stroke="rgba(255,255,255,0.3)" stroke-width="3">
+    <line x1="0" y1="520" x2="800" y2="520"/>
+    <line x1="0" y1="545" x2="800" y2="545"/>
+  </g>
+  
+  <!-- Main text -->
+  <text x="400" y="570" font-size="42" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">BEACH ROAD VIZAG</text>
+</svg>

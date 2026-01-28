@@ -1,0 +1,45 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="light1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffeb3b;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ff6f00;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg1)"/>
+  <ellipse cx="400" cy="500" rx="300" ry="150" fill="rgba(0,0,0,0.3)"/>
+  
+  <!-- Stadium structure -->
+  <rect x="150" y="180" width="500" height="280" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.3)" stroke-width="2" rx="20"/>
+  
+  <!-- Stadium seats effect -->
+  <g opacity="0.4">
+    <rect x="180" y="220" width="40" height="30" fill="#ffd700" rx="4"/>
+    <rect x="240" y="220" width="40" height="30" fill="#ff6b6b" rx="4"/>
+    <rect x="300" y="220" width="40" height="30" fill="#4ecdc4" rx="4"/>
+    <rect x="360" y="220" width="40" height="30" fill="#ffd700" rx="4"/>
+    <rect x="420" y="220" width="40" height="30" fill="#ff6b6b" rx="4"/>
+    <rect x="480" y="220" width="40" height="30" fill="#4ecdc4" rx="4"/>
+  </g>
+  
+  <!-- Stage lights -->
+  <circle cx="200" cy="200" r="30" fill="url(#light1)"/>
+  <circle cx="600" cy="200" r="30" fill="url(#light1)"/>
+  
+  <!-- Crowd silhouettes -->
+  <g fill="rgba(0,0,0,0.5)">
+    <circle cx="250" cy="420" r="15"/>
+    <circle cx="350" cy="430" r="18"/>
+    <circle cx="450" cy="425" r="16"/>
+    <circle cx="550" cy="435" r="15"/>
+    <circle cx="200" cy="450" r="12"/>
+    <circle cx="600" cy="455" r="14"/>
+  </g>
+  
+  <!-- Text overlay -->
+  <text x="400" y="550" font-size="48" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">IGMC STADIUM</text>
+</svg>

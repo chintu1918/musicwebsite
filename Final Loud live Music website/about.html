@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | Loud&Live | Premium Concert Events</title>
+  <link rel="shortcut icon" href="assets/Images/favicon.png" type="image/x-icon">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 100%);
+      background-attachment: fixed;
+      color: #333;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, rgba(30, 30, 50, 0.95) 0%, rgba(50, 40, 80, 0.95) 100%);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo img {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      border: 2px solid #667eea;
+      transition: transform 0.3s ease;
+    }
+
+    .logo img:hover {
+      transform: scale(1.1);
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.05em;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+      border-radius: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    nav a:hover {
+      background: rgba(102, 126, 234, 0.2);
+      color: #667eea;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Hamburger Menu */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 6px;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-left: auto;
+    }
+
+    .menu-toggle span {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: rotate(45deg) translate(10px, 10px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: flex;
+      }
+
+      nav {
+        position: fixed;
+        left: 0;
+        top: 80px;
+        width: 100%;
+        flex-direction: column;
+        background: linear-gradient(135deg, rgba(30, 30, 50, 0.98) 0%, rgba(50, 40, 80, 0.98) 100%);
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+
+      nav.active {
+        max-height: 500px;
+      }
+
+      nav a {
+        width: 100%;
+        padding: 16px 40px;
+        border-radius: 0;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+      }
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+
+    .hero-content {
+      max-width: 800px;
+      animation: fadeInUp 1s ease 0.2s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 72px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 40px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    /* Content Sections */
+    .content-section {
+      padding: 80px 40px;
+      background: #fff;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .content-wrapper {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .content-wrapper h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 24px;
+      margin-top: 40px;
+    }
+
+    .content-wrapper h2:first-child {
+      margin-top: 0;
+    }
+
+    .content-wrapper p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    /* Mission/Vision Grid */
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      margin: 60px 0;
+    }
+
+    .mission-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+      padding: 32px;
+      border-radius: 16px;
+      border: 2px solid rgba(102, 126, 234, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .mission-card h3 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 16px;
+    }
+
+    .mission-card p {
+      font-size: 15px;
+      color: #666;
+      line-height: 1.7;
+    }
+
+    /* Values Grid */
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin: 40px 0;
+    }
+
+    .value-item {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+      padding: 24px;
+      border-radius: 12px;
+      border-left: 4px solid #667eea;
+    }
+
+    .value-item h4 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .value-item p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* Timeline */
+    .timeline {
+      margin: 40px 0;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .timeline-item {
+      padding-left: 40px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 5px;
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      border: 3px solid #fff;
+      box-shadow: 0 0 0 3px #667eea;
+    }
+
+    .timeline-item h4 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 8px;
+    }
+
+    .timeline-item p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, #1e1e32 0%, #2a2850 100%);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 48px 24px;
+      border-top: 1px solid rgba(102, 126, 234, 0.12);
+      margin-top: 60px;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .footer-brand img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-brand p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .footer-brand p:first-of-type {
+      font-weight: 700;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .footer-brand p:last-of-type {
+      color: rgba(255, 255, 255, 0.75);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    footer p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #f093fb;
+    }
+
+    /* Social Media Icons */
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .social-icons a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(102, 126, 234, 0.2);
+      border-radius: 50%;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(102, 126, 234, 0.3);
+    }
+
+    .social-icons a:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      transform: translateY(-3px);
+      border-color: #667eea;
+    }
+
+    .footer-links-section {
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding-top: 32px;
+      border-top: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .footer-links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .footer-col h4 {
+      font-size: 14px;
+      color: #f3f3f7;
+      margin-bottom: 16px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col ul li a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .footer-col ul li a:hover {
+      color: #f093fb;
+      transform: translateX(4px);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+      }
+
+      nav a {
+        width: 100%;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .section-title {
+        font-size: 32px;
+      }
+
+      .content-section {
+        padding: 40px 20px;
+      }
+
+      .content-wrapper h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="assets/images/logo.png" alt="Loud&Live Logo" />
+      <span class="logo-text">LOUD&LIVE</span>
+    </div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="speakers.html">Speakers</a>
+      <a href="tickets.html">Tickets</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="regestration.html" class="nav-btn">Book Now</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>About Loud&Live</h1>
+      <p>Revolutionizing Live Music Entertainment Across India</p>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="content-wrapper">
+      <h2>Who We Are</h2>
+      <p>
+        Loud&Live is a premium live music event organizer dedicated to bringing world-class concert experiences to music enthusiasts across India. Founded with a passion for live entertainment, we curate and host exceptional music events featuring renowned <a href="speakers.html" style="color: #667eea; text-decoration: none; font-weight: 600;">artists</a>, emerging talents, and diverse genres.
+      </p>
+      <p>
+        Our mission is to create unforgettable moments where music lovers from all walks of life come together to celebrate the art of live performance. From intimate acoustic sessions to grand festival productions, Loud&Live delivers premium experiences with meticulous attention to detail. Check out our <a href="home.html" style="color: #667eea; text-decoration: none; font-weight: 600;">upcoming events</a> and <a href="schedule.html" style="color: #667eea; text-decoration: none; font-weight: 600;">schedule</a>.
+      </p>
+
+      <div class="mission-grid">
+        <div class="mission-card">
+          <h3>🎯 Our Mission</h3>
+          <p>To create extraordinary live music experiences that unite communities, celebrate artistic excellence, and make premium entertainment accessible to everyone.</p>
+        </div>
+        <div class="mission-card">
+          <h3>✨ Our Vision</h3>
+          <p>To become India's leading live music platform, known for exceptional events, artist development, and fostering a vibrant cultural ecosystem.</p>
+        </div>
+      </div>
+
+      <h2>Our Core Values</h2>
+      <div class="values-grid">
+        <div class="value-item">
+          <h4>🎵 Quality First</h4>
+          <p>We prioritize excellence in every aspect—artists, venues, sound systems, and audience experience.</p>
+        </div>
+        <div class="value-item">
+          <h4>🤝 Community Focused</h4>
+          <p>Music brings people together. We foster connections between artists and fans, creating lasting memories.</p>
+        </div>
+        <div class="value-item">
+          <h4>🚀 Innovation</h4>
+          <p>We continuously evolve our offerings with latest technology and creative approaches to entertainment.</p>
+        </div>
+        <div class="value-item">
+          <h4>💎 Inclusivity</h4>
+          <p>Everyone deserves access to premium live music. We offer diverse pricing tiers and inclusive experiences.</p>
+        </div>
+        <div class="value-item">
+          <h4>🌟 Artist Support</h4>
+          <p>We believe in nurturing talent and providing platforms for artists to reach wider audiences.</p>
+        </div>
+        <div class="value-item">
+          <h4>🎭 Authenticity</h4>
+          <p>We celebrate genuine musical expression and stay true to the essence of live performance.</p>
+        </div>
+      </div>
+
+      <h2>Our Journey</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <h4>2024 - The Beginning</h4>
+          <p>Loud&Live was founded with a vision to revolutionize the live music experience in India. We started by identifying the gap in premium, well-organized concert experiences and committed to filling it.</p>
+        </div>
+        <div class="timeline-item">
+          <h4>2025 - Expansion & Growth</h4>
+          <p>Rapidly expanded to multiple cities—Vijayawada, Vizag, and Hyderabad. Partnered with premier venues and attracted world-class <a href="speakers.html" style="color: #667eea; text-decoration: none; font-weight: 600;">artists</a>. Established a loyal audience base of thousands of music enthusiasts.</p>
+        </div>
+        <div class="timeline-item">
+          <h4>2026 & Beyond - Vision Forward</h4>
+          <p>Planning to expand to more cities, introduce festival-scale events, develop artist discovery programs, and leverage technology for enhanced fan experiences. Our goal is to make Loud&Live synonymous with premium live music in India. <a href="regestration.html" style="color: #667eea; text-decoration: none; font-weight: 600;">Book your tickets</a> now to be part of our journey!</p>
+        </div>
+      </div>
+
+      <h2>Why Choose Loud&Live?</h2>
+      <p>
+        When you choose Loud&Live, you're not just buying a ticket—you're joining a community of music lovers who value quality, authenticity, and unforgettable experiences. Check our <a href="tickets.html" style="color: #667eea; text-decoration: none; font-weight: 600;">flexible pricing options</a> and <a href="faq.html" style="color: #667eea; text-decoration: none; font-weight: 600;">FAQs</a> to learn more. Here's what sets us apart:
+      </p>
+      <div class="values-grid">
+        <div class="value-item">
+          <h4>Curated Artist Lineup</h4>
+          <p>We handpick performers known for their talent and stage presence.</p>
+        </div>
+        <div class="value-item">
+          <h4>Premium Venues</h4>
+          <p>All events are held in top-tier locations with excellent acoustics and facilities.</p>
+        </div>
+        <div class="value-item">
+          <h4>Professional Management</h4>
+          <p>Our experienced team ensures seamless event execution and attendee satisfaction.</p>
+        </div>
+        <div class="value-item">
+          <h4>Customer Support</h4>
+          <p>Dedicated support team available to assist with bookings, queries, and special requests.</p>
+        </div>
+        <div class="value-item">
+          <h4>Transparent Pricing</h4>
+          <p>No hidden charges. Clear pricing for Regular, Premium, and VIP categories.</p>
+        </div>
+        <div class="value-item">
+          <h4>Digital Experience</h4>
+          <p>Seamless online booking, digital ticketing, and exclusive content for members.</p>
+        </div>
+      </div>
+
+      <h2>Get In Touch</h2>
+      <p>
+        Have questions? Want to collaborate with us? We'd love to hear from you! Reach out through our <a href="contact.html" style="color: #667eea; text-decoration: none; font-weight: 600;">contact page</a>, check our <a href="faq.html" style="color: #667eea; text-decoration: none; font-weight: 600;">FAQs</a>, or email us at <a href="mailto:info@loudlive.com" style="color: #667eea; text-decoration: none; font-weight: 600;">info@loudlive.com</a>. Ready to join us? <a href="regestration.html" style="color: #667eea; text-decoration: none; font-weight: 600;">Book your tickets now!</a>
+      </p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/Images/logo.png" alt="Loud&Live" />
+        <p>Loud&Live</p>
+        <p>Premium live music events in Vijayawada, Vizag, and Hyderabad. Join us for unforgettable nights.</p>
+        <div class="social-icons">
+          <a href="mailto:info@loudlive.com" title="Email us" aria-label="Email">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="4" width="20" height="16" rx="2" fill="currentColor"/>
+              <path d="M2 4l10 8 10-8" stroke="#fff" stroke-width="2" fill="none"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/loudandlive" target="_blank" title="Follow us on Instagram" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="5" fill="currentColor"/>
+              <path d="M12 7.2a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm0 7.9a3.1 3.1 0 110-6.2 3.1 3.1 0 010 6.2zM17.7 6.6a1.1 1.1 0 11-2.2 0 1.1 1.1 0 012.2 0z" fill="#fff"/>
+            </svg>
+          </a>
+          <a href="https://www.x.com/loudandlive" target="_blank" title="Follow us on X" aria-label="X">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="2" fill="currentColor"/>
+              <path d="M17 2h-3.5L9 13.5 5.5 2H2l6 8.5-6 8.5h3.5L9 11l3.5 8h3.5l-6-8.5L17 2z" fill="#fff"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Centered Quick Links and Information -->
+      <div class="footer-links-section">
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="home.html">Home</a></li>
+              <li><a href="schedule.html">Schedule</a></li>
+              <li><a href="speakers.html">Speakers</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Information</h4>
+            <ul>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="tickets.html">Tickets</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="regestration.html">Book Now</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; color: rgba(255,255,255,0.7); font-size: 13px; padding-top: 12px;">
+      Copyright 1999-2025 by Loud&Live Events. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const nav = document.querySelector('nav');
+
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+
+    // Close menu when a link is clicked
+    nav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        nav.classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>

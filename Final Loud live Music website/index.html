@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loud&Live | Premium Concert Events</title>
+  <link rel="shortcut icon" href="assets/Images/favicon.png" type="image/x-icon">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 100%);
+      background-attachment: fixed;
+      color: #333;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, rgba(30, 30, 50, 0.95) 0%, rgba(50, 40, 80, 0.95) 100%);
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo img {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      border: 2px solid #667eea;
+      transition: transform 0.3s ease;
+    }
+
+    .logo img:hover {
+      transform: scale(1.1);
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.05em;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+      border-radius: 8px;
+      letter-spacing: 0.02em;
+    }
+
+    nav a:hover {
+      background: rgba(102, 126, 234, 0.2);
+      color: #667eea;
+    }
+
+    .nav-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Hamburger Menu */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 6px;
+      background: none;
+      border: none;
+      padding: 0;
+      margin-left: auto;
+    }
+
+    .menu-toggle span {
+      width: 28px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+      transform: rotate(45deg) translate(10px, 10px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: flex;
+      }
+
+      nav {
+        position: fixed;
+        left: 0;
+        top: 80px;
+        width: 100%;
+        flex-direction: column;
+        background: linear-gradient(135deg, rgba(30, 30, 50, 0.98) 0%, rgba(50, 40, 80, 0.98) 100%);
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+      }
+
+      nav.active {
+        max-height: 500px;
+      }
+
+      nav a {
+        width: 100%;
+        padding: 16px 40px;
+        border-radius: 0;
+        border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+      }
+    }
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 40px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    }
+
+    .hero-content {
+      max-width: 800px;
+      animation: fadeInUp 1s ease 0.2s backwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 72px;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 40px;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .hero-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.5);
+    }
+
+    /* Events Section */
+    .events-section {
+      padding: 80px 40px;
+      background: #fff;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 48px;
+      font-weight: 900;
+      margin-bottom: 60px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .event-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .event-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 50px rgba(102, 126, 234, 0.2);
+    }
+
+    .event-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .event-content {
+      padding: 24px;
+    }
+
+    .event-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 12px;
+    }
+
+    .event-content p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .event-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 16px;
+      border-top: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .event-date {
+      font-size: 13px;
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .event-price {
+      font-size: 16px;
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    /* Features Section */
+    .features-section {
+      padding: 80px 40px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: #fff;
+      padding: 32px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #333;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, #1e1e32 0%, #2a2850 100%);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 48px 24px;
+      border-top: 1px solid rgba(102, 126, 234, 0.12);
+      margin-top: 60px;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .footer-brand img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-brand p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .footer-brand p:first-of-type {
+      font-weight: 700;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .footer-brand p:last-of-type {
+      color: rgba(255, 255, 255, 0.75);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    footer p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #f093fb;
+    }
+
+    /* Social Media Icons */
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .social-icons a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(102, 126, 234, 0.2);
+      border-radius: 50%;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(102, 126, 234, 0.3);
+    }
+
+    .social-icons a:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      transform: translateY(-3px);
+      border-color: #667eea;
+    }
+
+    .footer-links-section {
+      max-width: 1200px;
+      margin: 32px auto 0;
+      padding-top: 32px;
+      border-top: 1px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .footer-links-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .footer-col h4 {
+      font-size: 14px;
+      color: #f3f3f7;
+      margin-bottom: 16px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-col ul li a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    .footer-col ul li a:hover {
+      color: #f093fb;
+      transform: translateX(4px);
+    }
+
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        gap: 20px;
+        padding: 16px;
+      }
+
+      nav {
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+      }
+
+      nav a {
+        width: 100%;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .section-title {
+        font-size: 32px;
+      }
+
+      .events-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <img src="assets/images/logo.png" alt="Loud&Live Logo" />
+      <span class="logo-text">LOUD&LIVE</span>
+    </div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="schedule.html">Schedule</a>
+      <a href="speakers.html">Speakers</a>
+      <a href="tickets.html">Tickets</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+      <a href="regestration.html" class="nav-btn">Book Now</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Experience Live Music Like Never Before</h1>
+      <p>Premium concerts featuring world-class artists in Vijayawada, Vizag, and Hyderabad</p>
+      <a href="regestration.html"><button class="hero-btn">Get Tickets Now</button></a>
+    </div>
+  </section>
+
+  <section class="events-section">
+    <h2 class="section-title">Upcoming Events</h2>
+    <div class="events-grid">
+      <div class="event-card">
+          <img src="assets/Images/IGMC-STADIUM.svg" alt="Vijayawada Music Fest" />
+        <div class="event-content">
+          <h3>Vijayawada Music Fest</h3>
+          <p>Experience an electrifying night of live music at IGMC Stadium. Premium sound, premium vibes.</p>
+          <div class="event-meta">
+            <span class="event-date">14 FEB 2026</span>
+            <span class="event-price">From ₹1499</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-card">
+          <img src="assets/Images/JEWEL-CONVENTION.svg" alt="Vijayawada Rhythm Night" />
+        <div class="event-content">
+          <h3>Vijayawada Rhythm Night</h3>
+          <p>Get lost in the rhythm at Sai Jewel Convention. A night dedicated to the best of live performances.</p>
+          <div class="event-meta">
+            <span class="event-date">21 FEB 2026</span>
+            <span class="event-price">From ₹1499</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-card">
+          <img src="assets/Images/NOVOTEL.svg" alt="Seaside Beats Live" />
+        <div class="event-content">
+          <h3>Seaside Beats Live</h3>
+          <p>Dance by the beach at Novotel Vizag. Where the ocean meets the music.</p>
+          <div class="event-meta">
+            <span class="event-date">31 DEC 2025</span>
+            <span class="event-price">From ₹1499</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-card">
+          <img src="assets/Images/BEACH-ROAD.svg" alt="Beach Road Soundwave" />
+        <div class="event-content">
+          <h3>Beach Road Soundwave</h3>
+          <p>Experience music on the iconic Vizag Beach Road. An unforgettable evening awaits.</p>
+          <div class="event-meta">
+            <span class="event-date">30 DEC 2025</span>
+            <span class="event-price">From ₹1499</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-card">
+          <img src="assets/Images/RAMOJI-FILM-CITY.svg" alt="Movie City Music Carnival" />
+        <div class="event-content">
+          <h3>Movie City Music Carnival</h3>
+          <p>Join us at Ramoji Film City for a carnival of live music. Family-friendly and spectacular.</p>
+          <div class="event-meta">
+            <span class="event-date">17 JAN 2026</span>
+            <span class="event-price">From ₹1499</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="event-card">
+          <img src="assets/Images/SHILPARAMAM.svg" alt="Hyderabad Live Jam" />
+        <div class="event-content">
+          <h3>Hyderabad Live Jam</h3>
+          <p>Jam with the best at Shilparamam. A celebration of music, culture, and community.</p>
+          <div class="event-meta">
+            <span class="event-date">24 JAN 2026</span>
+            <span class="event-price">From ₹1499</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-section">
+    <h2 class="section-title">Why Choose Loud&Live?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎵</div>
+        <h3>Premium Artists</h3>
+        <p>World-class performers bringing the best live music experience to your city.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎟️</div>
+        <h3>Easy Booking</h3>
+        <p>Simple, secure ticket booking with instant PDF delivery to your phone and email.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏟️</div>
+        <h3>Best Venues</h3>
+        <p>Curated locations with premium sound, seating, and amenities for your comfort.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💰</div>
+        <h3>Flexible Pricing</h3>
+        <p>Choose from Regular, Premium, and VIP tiers to match your budget and preferences.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>Digital Tickets</h3>
+        <p>QR code and barcode on your phone. No need to print—just show and enter.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌟</div>
+        <h3>Exclusive Perks</h3>
+        <p>VIP members get early access to tickets, exclusive merchandise, and meet-and-greets.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="assets/Images/logo.png" alt="Loud&Live" />
+        <p>Loud&Live</p>
+        <p>Premium live music events in Vijayawada, Vizag, and Hyderabad. Join us for unforgettable nights.</p>
+        <div class="social-icons">
+          <a href="mailto:info@loudlive.com" title="Email us" aria-label="Email">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="4" width="20" height="16" rx="2" fill="currentColor"/>
+              <path d="M2 4l10 8 10-8" stroke="#fff" stroke-width="2" fill="none"/>
+            </svg>
+          </a>
+          <a href="https://www.instagram.com/loudandlive" target="_blank" title="Follow us on Instagram" aria-label="Instagram">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="5" fill="currentColor"/>
+              <path d="M12 7.2a4.8 4.8 0 100 9.6 4.8 4.8 0 000-9.6zm0 7.9a3.1 3.1 0 110-6.2 3.1 3.1 0 010 6.2zM17.7 6.6a1.1 1.1 0 11-2.2 0 1.1 1.1 0 012.2 0z" fill="#fff"/>
+            </svg>
+          </a>
+          <a href="https://www.x.com/loudandlive" target="_blank" title="Follow us on X" aria-label="X">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="20" height="20" rx="2" fill="currentColor"/>
+              <path d="M17 2h-3.5L9 13.5 5.5 2H2l6 8.5-6 8.5h3.5L9 11l3.5 8h3.5l-6-8.5L17 2z" fill="#fff"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Centered Quick Links and Information -->
+      <div class="footer-links-section">
+        <div class="footer-links-grid">
+          <div class="footer-col">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><a href="home.html">Home</a></li>
+              <li><a href="schedule.html">Schedule</a></li>
+              <li><a href="speakers.html">Speakers</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Information</h4>
+            <ul>
+              <li><a href="about.html">About Us</a></li>
+              <li><a href="tickets.html">Tickets</a></li>
+              <li><a href="faq.html">FAQ</a></li>
+              <li><a href="regestration.html">Book Now</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width: 1200px; margin: 0 auto; text-align: center; color: rgba(255,255,255,0.7); font-size: 13px; padding-top: 12px;">
+      Copyright 1999-2025 by Loud&Live Events. All Rights Reserved.
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const nav = document.querySelector('nav');
+
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+
+    // Close menu when a link is clicked
+    nav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        menuToggle.classList.remove('active');
+        nav.classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>

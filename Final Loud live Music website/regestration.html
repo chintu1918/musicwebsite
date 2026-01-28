@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Music Concert Ticket Booking</title>
+
+  <!-- QR Code + Barcode + PDF libs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- Razorpay Checkout -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <!-- INTERNAL CSS -->
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 100%);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .form-wrapper {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+      padding: 40px;
+      width: 100%;
+      max-width: 600px;
+      border-radius: 28px;
+      box-shadow: 0 25px 70px rgba(90, 110, 255, 0.2), 0 0 2px rgba(0, 0, 0, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      transform: translateY(0);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-wrapper:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 35px 90px rgba(90, 110, 255, 0.25), 0 0 2px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-header {
+      text-align: center;
+      margin-bottom: 32px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 24px;
+      border-radius: 16px;
+      color: white;
+    }
+
+    .form-header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .form-header p {
+      margin: 0 0 12px;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.05em;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.05em;
+    }
+
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-row {
+      display: flex;
+      gap: 16px;
+    }
+
+    .field-row .field-group {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #333;
+      letter-spacing: 0.02em;
+    }
+
+    label span.optional {
+      font-weight: 500;
+      font-size: 12px;
+      color: #999;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid #e0e7ff;
+      font-size: 14px;
+      background: rgba(255, 255, 255, 0.7);
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+      background: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+      max-height: 140px;
+    }
+
+    .summary-box {
+      margin: 16px 0 24px;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+      border-radius: 14px;
+      border: 2px solid rgba(102, 126, 234, 0.2);
+      font-size: 13px;
+      color: #333;
+      backdrop-filter: blur(5px);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-row span.value {
+      font-weight: 700;
+      color: #667eea;
+    }
+
+    .summary-row.total {
+      padding-top: 8px;
+      border-top: 2px solid rgba(102, 126, 234, 0.2);
+    }
+
+    .summary-row.total span.value {
+      font-size: 16px;
+      color: #667eea;
+    }
+
+    .seat-warning {
+      font-size: 11px;
+      color: #c33;
+      margin-top: 3px;
+      display: none;
+    }
+
+    .seat-warning.visible {
+      display: block;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      flex: 1;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn-primary:active {
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #f0f4ff;
+      color: #667eea;
+      border: 2px solid #e0e7ff;
+      font-weight: 600;
+    }
+
+    .btn-secondary:hover {
+      background: #e8ecff;
+      border-color: #667eea;
+    }
+
+    /* Modals */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 999;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      padding: 20px 24px;
+      border-radius: 18px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-content h2 {
+      margin: 0 0 6px;
+    }
+
+    .modal-content p {
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: #555;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    #upiQr,
+    #ticketQrPreview {
+      margin: 10px auto 14px;
+    }
+
+    /* Horizontal Ticket Canvas */
+    #ticketCanvasWrapper {
+      display: none;
+    }
+
+    #ticketCanvas {
+      width: 900px;
+      height: 350px;
+      background: repeating-linear-gradient(
+          135deg,
+          #fafbff 0px,
+          #fafbff 8px,
+          #f2f4ff 8px,
+          #f2f4ff 16px
+        );
+      /* Anti-copy diagonal pattern */
+      border-radius: 20px;
+      border: 1px solid #cfd6ff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.16);
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Watermark */
+    #ticketCanvas::before {
+      content: "LIVE & LOUD • LIVE & LOUD • LIVE & LOUD";
+      position: absolute;
+      top: 50%;
+      left: -20%;
+      transform: translateY(-50%) rotate(-25deg);
+      font-size: 28px;
+      letter-spacing: 0.25em;
+      color: rgba(120, 130, 200, 0.08);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .ticket-left {
+      flex: 2.2;
+      padding: 22px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .ticket-right {
+      flex: 1;
+      border-left: 1px dashed #d0d5ff;
+      padding: 18px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      background: radial-gradient(circle at top, #fef2ff 0, #f5f7ff 45%, #e6e9ff 100%);
+    }
+
+    .ticket-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ticket-logo-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 30%, #ff8bcf, #5665ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    .ticket-logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .ticket-logo-text span:nth-child(1) {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #777;
+    }
+
+    .ticket-logo-text span:nth-child(2) {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .ticket-event-title {
+      margin-top: 12px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .ticket-subrow {
+      margin-top: 6px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px 18px;
+      margin-top: 14px;
+      font-size: 11px;
+    }
+
+    .ticket-grid-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #999;
+      margin-bottom: 2px;
+    }
+
+    .ticket-grid-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .ticket-id-pill {
+      position: absolute;
+      bottom: 16px;
+      left: 24px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px dashed #c8ceff;
+      font-size: 11px;
+      color: #555;
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(2px);
+    }
+
+    .ticket-right h3 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #777;
+      margin: 0;
+    }
+
+    #ticketQrCanvas {
+      width: 120px;
+      height: 120px;
+    }
+
+    #ticketBarcodeSvg {
+      width: 90%;
+    }
+
+    .ticket-amount {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .ticket-footer-note {
+      font-size: 9px;
+      color: #777;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    #downloadPdfBtn {
+      margin-top: 8px;
+      width: 100%;
+      max-width: 240px;
+    }
+
+    @media (max-width: 900px) {
+      #ticketCanvas {
+        transform: scale(0.7);
+        transform-origin: top center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+        align-items: flex-start;
+      }
+      .form-wrapper {
+        margin-top: 24px;
+        padding: 24px;
+      }
+      .field-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      button {
+        padding: 12px 14px;
+        font-size: 14px;
+      }
+    }
+
+    /* Footer */
+    footer {
+      background: linear-gradient(135deg, #1e1e32 0%, #2a2850 100%);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 48px 24px;
+      border-top: 1px solid rgba(102, 126, 234, 0.12);
+      margin-top: 60px;
+      width: 100%;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .footer-brand img {
+      width: 64px;
+      height: 64px;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-brand p {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .footer-brand p:first-of-type {
+      font-weight: 700;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .footer-brand p:last-of-type {
+      color: rgba(255, 255, 255, 0.75);
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    footer p {
+      font-size: 14px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    footer a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    footer a:hover {
+      color: #f093fb;
+    }
+
+    /* Social Media Icons */
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .social-icons a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(102, 126, 234, 0.2);
+      border-radius: 50%;
+      color: #667eea;
+      text-decoration: none;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(102, 126, 234, 0.3);
+    }
+
+    .social-icons a:hover {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      transform: translateY(-3px);
+      border-color: #667eea;
+    }
+
+    /* Toast */
+    #toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, rgba(34, 34, 34, 0.98) 0%, rgba(60, 60, 80, 0.98) 100%);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 2000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 250ms ease, transform 250ms ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      letter-spacing: 0.02em;
+    }
+    #toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-6px);
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-wrapper">
+    <div class="form-header">
+      <h1>Music Concert Booking</h1>
+      <p>Vijayawada • Vizag • Hyderabad</p>
+      <span class="badge">Premium Ticket • QR + Barcode • Auto PDF</span>
+    </div>
+
+    <form id="bookingForm">
+      <!-- Name -->
+      <div class="field-group">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" required />
+      </div>
+
+      <!-- Email + Phone -->
+      <div class="field-row">
+        <div class="field-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" required />
+        </div>
+        <div class="field-group">
+          <label for="phone">Phone Number</label>
+          <input id="phone" type="tel" maxlength="10" pattern="[0-9]{10}" title="Please enter a 10-digit phone number" required />
+        </div>
+      </div>
+
+      <!-- Event -->
+      <div class="field-group">
+        <label for="event">City / Event Choice</label>
+        <select id="event" required>
+          <option value="">Select Event</option>
+          <option value="Vijayawada Music Fest|IGMC Stadium, Vijayawada|14 FEB 2026 • 9:00 PM – 11:59 PM">
+            Vijayawada Music Fest — IGMC Stadium (14 FEB 2026)
+          </option>
+          <option value="Vijayawada Rhythm Night|Sai Jewel Convention, Vijayawada|21 FEB 2026 • 9:00 PM – 11:59 PM">
+            Vijayawada Rhythm Night — Sai Jewel Convention (21 FEB 2026)
+          </option>
+          <option value="Seaside Beats Live|Novotel Vizag, Vizag|31 DEC 2025 • 9:00 PM – 11:59 PM">
+            Seaside Beats Live — Novotel Vizag (31 DEC 2025)
+          </option>
+          <option value="Beach Road Soundwave|Vizag Beach Road, Vizag|30 DEC 2025 • 9:00 PM – 11:59 PM">
+            Beach Road Soundwave — Vizag Beach Road (30 DEC 2025)
+          </option>
+          <option value="Movie City Music Carnival|Ramoji Film City, Hyderabad|17 JAN 2026 • 9:00 PM – 11:59 PM">
+            Movie City Music Carnival — Ramoji Film City (17 JAN 2026)
+          </option>
+          <option value="Hyderabad Live Jam|Shilparamam, Hyderabad|24 JAN 2026 • 9:00 PM – 11:59 PM">
+            Hyderabad Live Jam — Shilparamam (24 JAN 2026)
+          </option>
+        </select>
+      </div>
+
+      <!-- Ticket type + quantity -->
+      <div class="field-row">
+        <div class="field-group">
+          <label for="ticketType">Ticket Type</label>
+          <select id="ticketType" required>
+            <option value="">Select type</option>
+            <option value="premium">Premium</option>
+            <option value="regular">Regular</option>
+            <option value="vip">VIP</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label for="quantity">Quantity</label>
+          <input id="quantity" type="number" min="1" max="10" value="1" required />
+        </div>
+      </div>
+
+      <!-- Premium (no extra ID required) -->
+
+      <!-- Summary -->
+      <div class="summary-box">
+        <div class="summary-row">
+          <span>Price per ticket</span>
+          <span class="value" id="pricePerTicket">₹0</span>
+        </div>
+        <div class="summary-row">
+          <span>Seats available</span>
+          <span class="value" id="seatsAvailable">-</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total amount</span>
+          <span class="value" id="totalAmount">₹0</span>
+        </div>
+        <div id="seatWarning" class="seat-warning">
+          Requested quantity is more than available seats.
+        </div>
+      </div>
+
+      <!-- Optional fields -->
+      <div class="field-group">
+        <label for="paymentMethod">
+          Payment Method <span class="optional">(optional, for record)</span>
+        </label>
+        <select id="paymentMethod">
+          <option value="">Select payment option</option>
+          <option value="upi">UPI</option>
+          <option value="card">Card</option>
+          <option value="netbanking">Net Banking</option>
+          <option value="cod">Pay at Venue</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label for="seatNumber">
+          Seat Number <span class="optional">(optional)</span>
+        </label>
+        <input id="seatNumber" type="text" placeholder="e.g., A12, VIP-01" />
+      </div>
+
+      <div class="field-group">
+        <label for="specialRequests">
+          Special Requests <span class="optional">(optional)</span>
+        </label>
+        <textarea
+          id="specialRequests"
+          placeholder="Any accessibility needs, group booking notes, etc."
+        ></textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="btn-row">
+        <button type="reset" class="btn-secondary">Clear</button>
+        <button type="submit" class="btn-primary">Book Tickets</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Toast for feedback -->
+  <div id="toast" class="hidden" aria-live="polite"></div>
+
+  <!-- Payment handled by Razorpay Checkout (no UPI modal needed) -->
+
+  <!-- TICKET MODAL (Preview + Download PDF) -->
+  <div id="ticketModal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Your Ticket</h2>
+      <p>Show QR / Barcode at entry • You can also download the PDF.</p>
+      <div id="ticketCanvasWrapper">
+        <div id="ticketCanvas">
+          <div class="ticket-left">
+            <div>
+              <div class="ticket-logo">
+                <div class="ticket-logo-icon">🎧</div>
+                <div class="ticket-logo-text">
+                  <span>Live & Loud</span>
+                  <span>MUSIC FEST</span>
+                </div>
+              </div>
+              <div class="ticket-event-title" id="tEventTitle">EVENT NAME</div>
+              <div class="ticket-subrow" id="tVenue">Venue</div>
+              <div class="ticket-subrow" id="tDateTime">Date & Time</div>
+              <div class="ticket-grid">
+                <div>
+                  <div class="ticket-grid-label">Name</div>
+                  <div class="ticket-grid-value" id="tName">-</div>
+                </div>
+                <div>
+                  <div class="ticket-grid-label">Ticket Type</div>
+                  <div class="ticket-grid-value" id="tType">-</div>
+                </div>
+                <div>
+                  <div class="ticket-grid-label">Quantity</div>
+                  <div class="ticket-grid-value" id="tQty">-</div>
+                </div>
+                <div>
+                  <div class="ticket-grid-label">Seat</div>
+                  <div class="ticket-grid-value" id="tSeat">General</div>
+                </div>
+                <div>
+                  <div class="ticket-grid-label">Payment</div>
+                  <div class="ticket-grid-value" id="tPayMethod">UPI</div>
+                </div>
+                <div>
+                  <div class="ticket-grid-label">Amount</div>
+                  <div class="ticket-grid-value" id="tAmount">₹0</div>
+                </div>
+              </div>
+            </div>
+            <div class="ticket-id-pill" id="tTicketId">TICKET ID</div>
+          </div>
+          <div class="ticket-right">
+            <div>
+              <h3>ADMIT ONE</h3>
+              <div class="ticket-amount" id="tAmountBig">₹0</div>
+            </div>
+            <div id="ticketQrCanvas"></div>
+            <svg id="ticketBarcodeSvg"></svg>
+            <div class="ticket-footer-note">
+              Duplicate / tampered tickets are not valid. This ticket is non-refundable and non-transferable.
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="downloadPdfBtn" class="btn-primary">Download Ticket PDF</button>
+      <button id="closeTicket" class="btn-secondary">Close</button>
+    </div>
+  </div>
+
+  
+
+  <!-- JAVASCRIPT -->
+  <script>
+    const PRICES = {
+      premium: 1,
+      regular: 1,
+      vip: 1
+    };
+
+    const SEAT_CAPACITY = {
+      "Vijayawada Music Fest": { premium: 200, regular: 400, vip: 150 },
+      "Vijayawada Rhythm Night": { premium: 150, regular: 350, vip: 120 },
+      "Seaside Beats Live": { premium: 250, regular: 450, vip: 180 },
+      "Beach Road Soundwave": { premium: 220, regular: 420, vip: 160 },
+      "Movie City Music Carnival": { premium: 200, regular: 500, vip: 200 },
+      "Hyderabad Live Jam": { premium: 180, regular: 380, vip: 140 }
+    };
+
+    const remainingSeats = JSON.parse(JSON.stringify(SEAT_CAPACITY));
+
+    const bookingForm = document.getElementById("bookingForm");
+    const fullNameInput = document.getElementById("fullName");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+    const eventSelect = document.getElementById("event");
+    const ticketTypeSelect = document.getElementById("ticketType");
+    const quantityInput = document.getElementById("quantity");
+    // premium has no extra ID field
+    const paymentMethodSelect = document.getElementById("paymentMethod");
+    const seatNumberInput = document.getElementById("seatNumber");
+    const specialRequestsInput = document.getElementById("specialRequests");
+
+    const pricePerTicketSpan = document.getElementById("pricePerTicket");
+    const totalAmountSpan = document.getElementById("totalAmount");
+    const seatsAvailableSpan = document.getElementById("seatsAvailable");
+    const seatWarning = document.getElementById("seatWarning");
+
+    // endpoints
+    const CREATE_ORDER_ENDPOINT = "http://localhost:3000/create-order";
+    const VERIFY_PAYMENT_ENDPOINT = "http://localhost:3000/verify-payment";
+    const TICKET_SERVER_SEND_ENDPOINT = "http://localhost:3000/send-ticket";
+
+    const ticketModal = document.getElementById("ticketModal");
+    const ticketCanvasWrapper = document.getElementById("ticketCanvasWrapper");
+    const ticketCanvas = document.getElementById("ticketCanvas");
+    const ticketQrCanvas = document.getElementById("ticketQrCanvas");
+    const ticketBarcodeSvg = document.getElementById("ticketBarcodeSvg");
+    const ticketIdSpan = document.getElementById("tTicketId");
+    const tEventTitle = document.getElementById("tEventTitle");
+    const tVenue = document.getElementById("tVenue");
+    const tDateTime = document.getElementById("tDateTime");
+    const tName = document.getElementById("tName");
+    const tType = document.getElementById("tType");
+    const tQty = document.getElementById("tQty");
+    const tSeat = document.getElementById("tSeat");
+    const tPayMethod = document.getElementById("tPayMethod");
+    const tAmount = document.getElementById("tAmount");
+    const tAmountBig = document.getElementById("tAmountBig");
+    const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+    const closeTicketBtn = document.getElementById("closeTicket");
+
+    let currentBooking = null;
+
+    function parseEvent(value) {
+      // "Event|Venue|DateTime"
+      const parts = value.split("|").map(s => s.trim());
+      return {
+        eventName: parts[0] || "",
+        venue: parts[1] || "",
+        dateText: parts[2] || ""
+      };
+    }
+
+    function updateSummary() {
+      const ticketType = ticketTypeSelect.value;
+      const eventValue = eventSelect.value;
+      const qty = parseInt(quantityInput.value, 10) || 0;
+
+      const pricePer = ticketType ? PRICES[ticketType] || 0 : 0;
+      pricePerTicketSpan.textContent = "₹" + pricePer;
+
+      let seats = "-";
+      if (eventValue && ticketType) {
+        const { eventName } = parseEvent(eventValue);
+        if (remainingSeats[eventName]) {
+          seats = remainingSeats[eventName][ticketType];
+        }
+      }
+      seatsAvailableSpan.textContent = seats;
+
+      const total = pricePer && qty && seats !== "-" ? pricePer * qty : 0;
+      totalAmountSpan.textContent = "₹" + total;
+
+      if (seats !== "-" && qty > seats) {
+        seatWarning.classList.add("visible");
+      } else {
+        seatWarning.classList.remove("visible");
+      }
+    }
+
+    ticketTypeSelect.addEventListener("change", () => {
+      // No special fields for premium; simply update summary
+      updateSummary();
+    });
+
+    eventSelect.addEventListener("change", updateSummary);
+    quantityInput.addEventListener("input", updateSummary);
+
+    
+
+    closeTicketBtn.addEventListener("click", () => {
+      ticketModal.classList.add("hidden");
+      ticketQrCanvas.innerHTML = "";
+      ticketBarcodeSvg.innerHTML = "";
+      bookingForm.reset();
+      // cleanup premium has no ID field
+      updateSummary();
+    });
+
+    bookingForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const fullName = fullNameInput.value.trim();
+      const email = emailInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const eventValue = eventSelect.value;
+      const ticketType = ticketTypeSelect.value;
+      const quantity = parseInt(quantityInput.value, 10) || 0;
+      const paymentMethod = paymentMethodSelect.value;
+      const seatNumber = seatNumberInput.value.trim();
+      const specialRequests = specialRequestsInput.value.trim();
+
+      if (!fullName || !email || !phone || !eventValue || !ticketType || !quantity) {
+        alert("Please fill all required fields.");
+        return;
+      }
+      // no student ID requirement; continue
+
+      const { eventName, venue, dateText } = parseEvent(eventValue);
+      const seatsLeft = remainingSeats[eventName][ticketType];
+
+      if (quantity > seatsLeft) {
+        alert(
+          "Not enough seats available.\nAvailable: " +
+            seatsLeft +
+            "\nRequested: " +
+            quantity
+        );
+        return;
+      }
+
+      const pricePer = PRICES[ticketType] || 0;
+      const totalAmount = pricePer * quantity;
+
+      currentBooking = {
+        eventName,
+        venue,
+        dateText,
+        fullName,
+        ticketType,
+        quantity,
+        totalAmount,
+        paymentMethod,
+        seatNumber,
+        specialRequests
+      };
+
+      // Create a Razorpay order on the server and open Checkout
+      try {
+        const amountPaise = Math.round(totalAmount * 100);
+        const createRes = await fetch(CREATE_ORDER_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount: amountPaise, currency: 'INR', receipt: 'rcpt_' + Date.now() })
+        });
+        const createJson = await createRes.json();
+        if (!createJson || !createJson.success) {
+          throw new Error((createJson && createJson.error) || 'create_order_failed');
+        }
+
+        const order = createJson.order;
+        const key_id = createJson.key_id || '';
+
+        const options = {
+          key: key_id,
+          amount: order.amount,
+          currency: order.currency,
+          name: 'Live & Loud',
+          description: eventName,
+          order_id: order.id,
+          handler: async function (razorRes) {
+            // Verify signature with server
+            try {
+              const verifyRes = await fetch(VERIFY_PAYMENT_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(razorRes)
+              });
+              const verifyJson = await verifyRes.json();
+              if (verifyJson && verifyJson.success) {
+                // Payment verified — finalize booking
+                remainingSeats[eventName][ticketType] -= quantity;
+                updateSummary();
+
+                const bookingId = 'BK' + Date.now().toString().slice(-6) + '-' + Math.floor(Math.random() * 99);
+                await populateAndShowTicket(bookingId, currentBooking);
+              } else {
+                showToast('Payment verification failed');
+              }
+            } catch (err) {
+              console.error('verify error', err);
+              showToast('Payment verification error');
+            }
+          },
+          theme: { color: '#5665ff' }
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        console.error('Order creation failed', err);
+        alert('Unable to initiate payment. Try again later.');
+      }
+    });
+
+    // PDF generation (extracted so we can auto-download after payment)
+    async function generateAndDownloadPdf(filename) {
+      try {
+        const { jsPDF } = window.jspdf;
+        const canvasElement = ticketCanvas;
+
+        const scale = 2;
+        const canvas = await html2canvas(canvasElement, {
+          scale,
+          useCORS: true,
+          logging: false
+        });
+
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF({
+          orientation: "landscape",
+          unit: "pt",
+          format: "a4"
+        });
+
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = pageWidth - 80;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        const x = 40;
+        const y = (pageHeight - imgHeight) / 2;
+
+        pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight);
+
+        // Return a data URL so caller can download or send to server.
+        const dataUrl = pdf.output("datauristring");
+
+        // Also save locally for convenience (user click/download)
+        if (filename) {
+          try {
+            pdf.save(filename);
+          } catch (e) {
+            // ignore save errors (some browsers might block programmatic save)
+            console.warn("Could not auto-save PDF locally:", e);
+          }
+        }
+
+        return dataUrl;
+      } catch (err) {
+        console.error("Error generating ticket PDF:", err);
+        throw err;
+      }
+    }
+
+    // Server endpoint to POST ticket PDF and request SMS (configured above)
+
+    // Send ticket PDF to server which will send SMS/MMS using an SMS provider
+    async function sendTicketToPhone(phoneNumber, filename, pdfDataUrl, email) {
+      try {
+        // Extract base64 portion
+        const base64 = pdfDataUrl.split(",")[1];
+        const payload = {
+          phone: phoneNumber,
+          filename,
+          pdfBase64: base64,
+          email: email || undefined
+        };
+
+        const res = await fetch(TICKET_SERVER_SEND_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("Server responded with " + res.status);
+        const data = await res.json();
+        return data;
+      } catch (err) {
+        console.error("Error sending ticket to phone:", err);
+        throw err;
+      }
+    }
+
+    // Button still triggers download when user clicks (and optionally send SMS)
+    downloadPdfBtn.addEventListener("click", async () => {
+      try {
+        const filename = "concert-ticket.pdf";
+        const dataUrl = await generateAndDownloadPdf(filename);
+        // If the user provided a phone number, attempt to send
+        const phone = phoneInput.value.trim();
+        if (phone) {
+          showToast("Sending ticket via SMS...");
+          await sendTicketToPhone(phone, filename, dataUrl);
+          showToast("Ticket sent via SMS");
+        }
+      } catch (err) {
+        showToast("Could not prepare/send ticket");
+      }
+    });
+
+    // Show a small toast message
+    function showToast(msg, ms = 2000) {
+      const toast = document.getElementById("toast");
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.remove("hidden");
+      toast.classList.add("visible");
+      setTimeout(() => {
+        toast.classList.remove("visible");
+        setTimeout(() => toast.classList.add("hidden"), 250);
+      }, ms);
+    }
+
+    // Wait until QR image/canvas and barcode SVG are ready.
+    function waitForQrAndBarcode(timeoutMs = 2000) {
+      return new Promise((resolve) => {
+        let qrReady = false;
+        let barcodeReady = false;
+
+        // QR: check for image or canvas node inside ticketQrCanvas
+        const checkQrNode = () => {
+          const img = ticketQrCanvas.querySelector('img');
+          if (img) {
+            if (img.complete) qrReady = true;
+            else img.addEventListener('load', () => { qrReady = true; if (qrReady && barcodeReady) resolve(); });
+            return;
+          }
+          const canvas = ticketQrCanvas.querySelector('canvas');
+          if (canvas) {
+            qrReady = true;
+            return;
+          }
+        };
+
+        // Barcode: observe the SVG container for children/attributes
+        const obs = new MutationObserver(() => {
+          if (ticketBarcodeSvg.childNodes.length > 0) {
+            barcodeReady = true;
+            try { obs.disconnect(); } catch (e) {}
+            if (qrReady || ticketQrCanvas.querySelector('canvas')) resolve();
+          }
+        });
+        obs.observe(ticketBarcodeSvg, { childList: true, subtree: true, attributes: true });
+
+        // initial checks
+        checkQrNode();
+        if (ticketBarcodeSvg.childNodes.length > 0) barcodeReady = true;
+        if (qrReady && barcodeReady) {
+          try { obs.disconnect(); } catch (e) {}
+          resolve();
+          return;
+        }
+
+        // fallback timeout
+        setTimeout(() => {
+          try { obs.disconnect(); } catch (e) {}
+          resolve();
+        }, timeoutMs);
+      });
+    }
+
+    // Populate ticket DOM, show modal, generate PDF and send to server (email + SMS)
+    async function populateAndShowTicket(bookingId, bookingData) {
+      const {
+        eventName,
+        venue,
+        dateText,
+        fullName,
+        ticketType,
+        quantity,
+        totalAmount,
+        paymentMethod,
+        seatNumber
+      } = bookingData;
+
+      ticketIdSpan.textContent = "Ticket ID: " + bookingId;
+      tEventTitle.textContent = eventName;
+      tVenue.textContent = venue;
+      tDateTime.textContent = dateText;
+      tName.textContent = fullName;
+      tType.textContent = ticketType.toUpperCase();
+      tQty.textContent = quantity;
+      tSeat.textContent = seatNumber || "General Admission";
+      tPayMethod.textContent = paymentMethod || "Online";
+      tAmount.textContent = "₹" + totalAmount;
+      tAmountBig.textContent = "₹" + totalAmount;
+
+      // Generate QR and barcode
+      ticketQrCanvas.innerHTML = "";
+      const qrText =
+        "TICKET\n" +
+        "ID: " + bookingId +
+        "\nEvent: " + eventName +
+        "\nName: " + fullName +
+        "\nType: " + ticketType.toUpperCase() +
+        "\nQty: " + quantity +
+        "\nAmount: ₹" + totalAmount;
+      new QRCode(ticketQrCanvas, {
+        text: qrText,
+        width: 120,
+        height: 120
+      });
+
+      const barcodeValue = bookingId.replace(/\D/g, "").slice(-10) || "1234567890";
+      JsBarcode("#ticketBarcodeSvg", barcodeValue, {
+        format: "CODE128",
+        displayValue: false,
+        height: 40,
+        margin: 0
+      });
+
+      // Show ticket modal
+      ticketCanvasWrapper.style.display = "block";
+      ticketModal.classList.remove("hidden");
+
+      try {
+        await waitForQrAndBarcode(2500);
+        const filename = "concert-ticket-" + bookingId + ".pdf";
+        const dataUrl = await generateAndDownloadPdf(filename);
+        showToast("Sending ticket...");
+        const phone = phoneInput.value.trim();
+        const email = emailInput.value.trim();
+        if (phone || email) {
+          await sendTicketToPhone(phone, filename, dataUrl, email);
+          showToast("Ticket sent to provided contacts");
+        } else {
+          showToast("Ticket generated");
+        }
+        // Auto-close after success
+        setTimeout(() => {
+          ticketModal.classList.add("hidden");
+          ticketQrCanvas.innerHTML = "";
+          ticketBarcodeSvg.innerHTML = "";
+          bookingForm.reset();
+          // cleanup premium has no ID field
+          updateSummary();
+        }, 900);
+      } catch (err) {
+        console.error('ticket flow error', err);
+        showToast('Could not generate/send ticket');
+      }
+    }
+
+    // initial summary
+    updateSummary();
+  </script>
+</body>
+</html>

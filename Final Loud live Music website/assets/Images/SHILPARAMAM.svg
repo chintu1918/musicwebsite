@@ -1,0 +1,55 @@
+<svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg6" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#667eea;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="temple" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#daa520;stop-opacity:0.7" />
+      <stop offset="100%" style="stop-color:#8b6914;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg6)"/>
+  
+  <!-- Traditional architecture structure -->
+  <rect x="150" y="120" width="500" height="320" fill="url(#temple)" stroke="rgba(255,255,255,0.3)" stroke-width="3" rx="8"/>
+  
+  <!-- Ornamental arch -->
+  <path d="M 200,200 Q 400,80 600,200" fill="none" stroke="rgba(255,215,0,0.6)" stroke-width="4" stroke-linecap="round"/>
+  
+  <!-- Arched entrance -->
+  <path d="M 300,250 Q 400,150 500,250" fill="rgba(255,255,255,0.1)" stroke="rgba(255,215,0,0.4)" stroke-width="2"/>
+  
+  <!-- Decorative pillars -->
+  <g fill="rgba(255,215,0,0.4)">
+    <rect x="180" y="250" width="30" height="150" rx="4"/>
+    <rect x="590" y="250" width="30" height="150" rx="4"/>
+  </g>
+  
+  <!-- Performance space indicators -->
+  <g fill="rgba(255,255,255,0.2)">
+    <circle cx="250" cy="300" r="15"/>
+    <circle cx="400" cy="310" r="15"/>
+    <circle cx="550" cy="300" r="15"/>
+  </g>
+  
+  <!-- Crowd silhouettes -->
+  <g fill="rgba(0,0,0,0.5)">
+    <circle cx="150" cy="480" r="14"/>
+    <circle cx="240" cy="490" r="16"/>
+    <circle cx="340" cy="500" r="17"/>
+    <circle cx="450" cy="505" r="16"/>
+    <circle cx="560" cy="495" r="16"/>
+    <circle cx="680" cy="485" r="14"/>
+  </g>
+  
+  <!-- Ambient lights -->
+  <g opacity="0.25" fill="rgba(255,215,0,0.5)">
+    <circle cx="300" cy="200" r="60"/>
+    <circle cx="500" cy="220" r="60"/>
+  </g>
+  
+  <!-- Main text -->
+  <text x="400" y="570" font-size="40" font-weight="bold" fill="white" text-anchor="middle" font-family="Arial">SHILPARAMAM</text>
+</svg>
